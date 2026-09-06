@@ -65,6 +65,8 @@
   #endif
 #endif
 
+static void setup_url_link(const char* label, const char* url);
+
 #include <algorithm>
 #include <cerrno>
 #include <cctype>
@@ -2354,9 +2356,11 @@ void draw_shader_row(LauncherModel* m, const LauncherTheme& th, float col_w = 0.
         std::filesystem::path shader_dir = std::filesystem::path("assets") / "shaders";
         std::error_code ec;
         std::filesystem::create_directories(shader_dir, ec);
+#if defined(IMGUI_VERSION_NUM) && IMGUI_VERSION_NUM >= 19100
         if (ImGui::GetPlatformIO().Platform_OpenInShellFn)
             ImGui::GetPlatformIO().Platform_OpenInShellFn(ImGui::GetCurrentContext(),
                                                           shader_dir.string().c_str());
+#endif
     }
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
         ImGui::SetTooltip("Open assets/shaders to add presets.");
@@ -6463,7 +6467,7 @@ static void draw_linkified_mod_author(
             ImGui::TextColored(col(th.text_muted), "%s", prefix.c_str());
             ImGui::SameLine(0, 0);
         }
-        ImGui::TextLinkOpenURL(link->name, link->url);
+        setup_url_link(link->name, link->url);
         cursor = next + std::strlen(link->name);
         if (cursor < author.size()) ImGui::SameLine(0, 0);
     }
@@ -6631,7 +6635,7 @@ static void draw_mod_packages(LauncherModel* m, const LauncherTheme& th) {
             if (package.source_url[0]) {
                 ImGui::TextColored(col(th.text_muted), "Source: ");
                 ImGui::SameLine(0, 0);
-                ImGui::TextLinkOpenURL(
+                setup_url_link(
                     package.source_name[0] ? package.source_name : "Project page",
                     package.source_url);
             }
@@ -7148,7 +7152,7 @@ static void draw_mod_features(LauncherModel* m, const LauncherTheme& th) {
             if (feature.source_url[0]) {
                 ImGui::TextColored(col(th.text_muted), "Source: ");
                 ImGui::SameLine(0, 0);
-                ImGui::TextLinkOpenURL(
+                setup_url_link(
                     feature.source_name[0] ? feature.source_name : "Project page",
                     feature.source_url);
             }
