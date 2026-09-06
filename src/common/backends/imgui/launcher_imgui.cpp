@@ -65,8 +65,6 @@
   #endif
 #endif
 
-static void setup_url_link(const char* label, const char* url);
-
 #include <algorithm>
 #include <cerrno>
 #include <cctype>
@@ -162,6 +160,8 @@ static void refresh_shader_presets() {
 const LauncherTheme* volatile g_th = nullptr;
 
 namespace {
+
+static void setup_url_link(const char* label, const char* url);
 
 // ImGui coordinates are already DPI-independent: the SDL2 platform reports the
 // window in points and the GL backend applies DisplayFramebufferScale when it
