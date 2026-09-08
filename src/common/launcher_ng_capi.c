@@ -21,6 +21,35 @@
 
 static char g_last_relaunch_exe[512];
 
+#if defined(LNG_SDL3)
+#define LNG_FREE_SURFACE SDL_DestroySurface
+#else
+#define LNG_FREE_SURFACE SDL_FreeSurface
+#endif
+
+static void launcher_apply_window_icon(SDL_Window* window, const char* path) {
+    if (!window || !path || !path[0])
+        return;
+
+    SDL_Surface* icon = SDL_LoadBMP(path);
+    if (!icon) {
+        fprintf(stderr, "[launcher] window icon unavailable (%s): %s\n",
+                path, SDL_GetError());
+        return;
+    }
+#if defined(LNG_SDL3)
+    if (!SDL_SetWindowIcon(window, icon)) {
+        fprintf(stderr, "[launcher] window icon could not be applied (%s): %s\n",
+                path, SDL_GetError());
+    }
+#else
+    SDL_SetWindowIcon(window, icon);
+#endif
+    LNG_FREE_SURFACE(icon);
+}
+
+#undef LNG_FREE_SURFACE
+
 void recomp_launcher_set_preserve_sdl(int preserve) {
     launcher_platform_set_quit_sdl(!preserve);
 }
@@ -50,6 +79,7 @@ int recomp_launcher_run_window(const char* window_title,
         // skipped, exactly like the old launcher's UNAVAILABLE path.
         return RECOMP_LAUNCHER_RESULT_UNAVAILABLE;
     }
+    launcher_apply_window_icon(plat.window, game ? game->window_icon_path : NULL);
 
     LauncherModel model;
     launcher_model_init(&model, io, game, initial_rom);

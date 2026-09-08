@@ -124,6 +124,11 @@ if(BUILD_TESTING)
     target_include_directories(recomp-runtime-ui-test PRIVATE src)
     add_test(NAME recomp-runtime-ui COMMAND $<TARGET_FILE:recomp-runtime-ui-test>)
 
+    add_executable(recomp-launcher-theme-test
+        tests/launcher_theme_test.c)
+    target_include_directories(recomp-launcher-theme-test PRIVATE src/common)
+    add_test(NAME recomp-launcher-theme COMMAND $<TARGET_FILE:recomp-launcher-theme-test>)
+
     add_executable(recomp-ui-psx-binds-test
         tests/psx_binds_test.c
         src/consoles/psx/psx_binds.c)
