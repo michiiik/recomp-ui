@@ -1278,6 +1278,11 @@ typedef struct RecompLauncherCGameInfo {
     const char* rom_patch_note;
     const char* rom_patch_cache_dir;
     const char* rom_patch_required_sha1;
+
+    /* Optional absolute BMP path for the native launcher window icon. NULL or
+     * empty leaves the platform-default icon unchanged. The launcher loads
+     * and releases this surface only after the platform window is open. */
+    const char* window_icon_path;
 } RecompLauncherCGameInfo;
 
 /* recomp_launcher_run_window return codes */

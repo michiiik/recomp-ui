@@ -9,6 +9,8 @@
 #ifndef LAUNCHER_NG_THEME_H
 #define LAUNCHER_NG_THEME_H
 
+#include <string.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -278,9 +280,32 @@ static inline LauncherTheme launcher_theme_gbc(void) {
     return t;
 }
 
+// "Pokemon Stadium 2" theme. Muted pale-blue arena surfaces with cream/gold
+// panels, dark navy text, and the red/yellow energy of the Stadium 2 artwork.
+// The primary red accent uses white text so selected controls remain readable.
+static inline LauncherTheme launcher_theme_stadium2(void) {
+    LauncherTheme t = launcher_theme_default();   // inherit spacing/type/dims
+    t.background      = lng_rgba(0.690f, 0.757f, 0.816f, 1.0f); // #B0C1D0 sky
+    t.background2     = lng_rgba(0.835f, 0.867f, 0.890f, 1.0f); // #D5DDE3
+    t.panel           = lng_rgba(0.941f, 0.906f, 0.820f, 1.0f); // #F0E7D1 cream
+    t.panel_hovered   = lng_rgba(0.894f, 0.843f, 0.722f, 1.0f); // #E4D7B8
+    t.control         = lng_rgba(0.910f, 0.867f, 0.749f, 1.0f); // #E8DDBF
+    t.control_hovered = lng_rgba(0.835f, 0.769f, 0.612f, 1.0f); // #D5C49C
+    t.border          = lng_rgba(0.545f, 0.596f, 0.643f, 1.0f); // #8B98A4
+    t.accent          = lng_rgba(0.725f, 0.180f, 0.180f, 1.0f); // #B92E2E Stadium red
+    t.accent_dim      = lng_rgba(0.549f, 0.122f, 0.141f, 1.0f); // #8C1F24
+    t.accent_text     = lng_rgba(1.0f, 1.0f, 1.0f, 1.0f);       // white
+    t.accent2         = lng_rgba(0.439f, 0.314f, 0.102f, 1.0f); // muted gold
+    t.text            = lng_rgba(0.114f, 0.165f, 0.220f, 1.0f); // dark navy
+    t.text_muted      = lng_rgba(0.294f, 0.369f, 0.439f, 1.0f); // blue-grey
+    t.scanlines       = 0;                                      // modern flat UI
+    return t;
+}
+
 // Pick a built-in theme by name ("psx" -> PlayStation, "gba" -> Game Boy
 // Advance, "gbc" -> Game Boy Color, "gb" -> Game Boy (DMG), "n64" -> Nintendo
-// 64, "nes" -> Nintendo Entertainment System, "genesis" -> Sega Genesis;
+// 64, "nes" -> Nintendo Entertainment System, "genesis" -> Sega Genesis,
+// "stadium2" -> Pokemon Stadium 2;
 // anything else -> default CRT). Note the "gb*" order: match "gba" and "gbc"
 // (3rd char) BEFORE the bare "gb" fallback.
 static inline LauncherTheme launcher_theme_by_name(const char* name) {
@@ -311,6 +336,8 @@ static inline LauncherTheme launcher_theme_by_name(const char* name) {
     if (name && (name[0] == 'g' || name[0] == 'G') &&
         (name[1] == 'e' || name[1] == 'E'))
         return launcher_theme_genesis();
+    if (name && strcmp(name, "stadium2") == 0)
+        return launcher_theme_stadium2();
     return launcher_theme_default();
 }
 
